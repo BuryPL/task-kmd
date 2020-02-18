@@ -20,15 +20,37 @@ namespace api.Controllers
         }
 
         [HttpGet]
+        [Route("GetAllUsers")]
         public IEnumerable<User> GetUsers()
         {
             return _repo.GetUsers();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetUser/{id}")]
+        //[Route("GetUser/")]
         public ActionResult<User> GetUser(long id)
         {
             return _repo.GetSpecificUser(id);
+        }
+
+        [HttpPut]
+        [Route("AddUser")]
+        public void AddUser([FromBody]User newUser)
+        {
+            _repo.AddUser(newUser);
+        }
+
+        [HttpPost]
+        [Route("UpdateUser")]
+        public void UpdateUser([FromBody]User newUser)
+        {
+            _repo.UpdateUser(newUser);
+        }
+
+        [HttpDelete("DeleteUser/{id}")]
+        public void DeleteUser(int id)
+        {
+            _repo.DeleteUser(id);
         }
     }
 }
