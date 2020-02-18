@@ -15,27 +15,35 @@ namespace DataAccess
 
         public IEnumerable<User> GetUsers()
         {
-            return _connectionHelper.Query<User>("");
+            string query = @"SELECT id, initials, [name] FROM [user]";
+            return _connectionHelper.Query<User>(query);
         }
 
         public User GetSpecificUser(long id)
         {
-            return _connectionHelper.QueryFirstOrDefault<User>("", new { id });
+            string query = @"SELECT id, initials, [name] FROM [user] WHERE id = @id";
+            return _connectionHelper.QueryFirstOrDefault<User>(query, new { id });
         }
 
         public void AddUser(User newUser)
         {
-            _connectionHelper.Execute("", newUser);
+            string query = "INSERT INTO [user] (initials, [name]) VALUES (@initials, @name)";
+            _connectionHelper.Execute(query, newUser);
         }
 
         public void UpdateUser(User newUser)
         {
-            _connectionHelper.Execute("", newUser);
+            string query = @"UPDATE [user]
+                            SET initials = @initials, 
+                                [name] = @name
+                            WHERE id = @id";
+            _connectionHelper.Execute(query, newUser);
         }
 
         public void DeleteUser(long id)
         {
-            _connectionHelper.Execute("", new{id});
+            string query = "DELETE FROM [user] WHERE id = @id";
+            _connectionHelper.Execute(query, new{id});
         }
     }
 }
