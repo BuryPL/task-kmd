@@ -21,36 +21,36 @@ namespace api.Controllers
 
         [HttpGet]
         [Route("GetAllUsers")]
-        public IEnumerable<User> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
-            return _repo.GetUsers();
+            return await _repo.GetUsers();
         }
 
         [HttpGet("GetUser/{id}")]
         //[Route("GetUser/")]
-        public ActionResult<User> GetUser(long id)
+        public async Task<ActionResult<User>> GetUser(long id)
         {
-            return _repo.GetSpecificUser(id);
+            return await _repo.GetSpecificUser(id);
         }
 
         [HttpPut]
         [Route("AddUser")]
-        public void AddUser([FromBody]User newUser)
+        public async Task AddUser([FromBody]User newUser)
         {
-            _repo.AddUser(newUser);
+            await _repo.AddUser(newUser);
         }
 
         [HttpPost]
         [Route("UpdateUser")]
-        public void UpdateUser([FromBody]User newUser)
+        public async Task UpdateUser([FromBody]User newUser)
         {
-            _repo.UpdateUser(newUser);
+            await _repo.UpdateUser(newUser);
         }
 
         [HttpDelete("DeleteUser/{id}")]
-        public void DeleteUser(int id)
+        public async Task DeleteUser(int id)
         {
-            _repo.DeleteUser(id);
+            await _repo.DeleteUser(id);
         }
     }
 }

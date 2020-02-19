@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace DataAccess
 {
     public interface IConnectionHelper
     {
-        T Execute<T>(Func<IDbConnection, T> getData);
+        Task<T> ExecuteAsync<T>(Func<IDbConnection, Task<T>> getData);
     }
 }

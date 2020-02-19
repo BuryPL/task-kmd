@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DataAccess
 {
@@ -18,14 +19,14 @@ namespace DataAccess
             _connectionString = connectionString;
         }
 
-        public T Execute<T>(Func<IDbConnection, T> getData)
+        public async Task<T> ExecuteAsync<T>(Func<IDbConnection, Task<T>> getData)
         {
             using (DbConnection conn = System.Data.SqlClient.SqlClientFactory.Instance.CreateConnection())
             {
                 conn.ConnectionString = _connectionString;
-                conn.Open();
+                await conn.OpenAsync();
 
-                return getData(conn);
+                return await getData(conn);
             }
         }
     }

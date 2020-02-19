@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Models;
 
 namespace DataAccess
@@ -13,37 +14,39 @@ namespace DataAccess
             _connectionHelper = connectionHelper ?? throw new ArgumentNullException(nameof(connectionHelper));
         }
 
-        public IEnumerable<User> GetUsers()
+        public async Task<IEnumerable<User>> GetUsers()
         {
             string query = @"SELECT id, initials, [name] FROM [user]";
-            return _connectionHelper.Query<User>(query);
+            return await _connectionHelper.QueryAsync<User>(query);
         }
 
-        public User GetSpecificUser(long id)
+        public async Task<User> GetSpecificUser(long id)
         {
             string query = @"SELECT id, initials, [name] FROM [user] WHERE id = @id";
-            return _connectionHelper.QueryFirstOrDefault<User>(query, new { id });
+            return await _connectionHelper.QueryFirstOrDefaultAsync<User>(query, new { id });
         }
 
-        public void AddUser(User newUser)
+        public async Task<long> AddUser(User newUser)
         {
-            string query = "INSERT INTO [user] (initials, [name]) VALUES (@initials, @name)";
-            _connectionHelper.Execute(query, newUser);
+            string query = @"INSERT INTO [user] (initials, [name]) 
+                            OUTPUT INSERTED.[id]
+                            VALUES (@initials, @name)";
+            return await _connectionHelper.ExecuteRetAsync(query, newUser);
         }
 
-        public void UpdateUser(User newUser)
+        public async Task<int> UpdateUser(User newUser)
         {
             string query = @"UPDATE [user]
                             SET initials = @initials, 
                                 [name] = @name
                             WHERE id = @id";
-            _connectionHelper.Execute(query, newUser);
+            return await _connectionHelper.ExecuteRetAsync(query, newUser);
         }
 
-        public void DeleteUser(long id)
+        public async Task<int> DeleteUser(long id)
         {
             string query = "DELETE FROM [user] WHERE id = @id";
-            _connectionHelper.Execute(query, new{id});
+            return await _connectionHelper.ExecuteRetAsync(query, new{id});
         }
     }
 }
